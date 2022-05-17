@@ -14,6 +14,7 @@ app.use(express.static(__dirname + '/public'));
  ************/
 
 const db = require('./models');
+const BooksModel = require("./models/books");
 
 /**********
  * ROUTES *
@@ -81,7 +82,7 @@ app.get('/api/books/', (req, res) => {
 /*
  * Add a book information into database
  */
-app.post('/api/books/', (req, res) => {
+app.post('/api/books/', async (req, res) => {
 
   /*
    * New Book information in req.body
@@ -94,14 +95,15 @@ app.post('/api/books/', (req, res) => {
   /*
    * return the new book information object as json
    */
-  var newBook = {};
-  res.json(newBook);
+  const newBook = new BooksModel(req.body);
+  const book = await newBook.save();
+  res.json(book);
 });
 
 /*
  * Update a book information based upon the specified ID
  */
-app.put('/api/books/:id', (req, res) => {
+app.put('/api/books/:id', async (req, res) => {
   /*
    * Get the book ID and new information of book from the request parameters
    */
@@ -115,13 +117,13 @@ app.put('/api/books/:id', (req, res) => {
   /*
    * Send the updated book information as a JSON object
    */
-  var updatedBookInfo = {};
+  const updatedBookInfo = await BooksModel.findByIdAndUpdate(req.params.id, bookNewData);
   res.json(updatedBookInfo);
 });
 /*
  * Delete a book based upon the specified ID
  */
-app.delete('/api/books/:id', (req, res) => {
+app.delete('/api/books/:id', async (req, res) => {
   /*
    * Get the book ID of book from the request parameters
    */
@@ -133,7 +135,8 @@ app.delete('/api/books/:id', (req, res) => {
   /*
    * Send the deleted book information as a JSON object
    */
-  var deletedBook = {};
+  const deletedBook = await BooksModel.findById(req.params.id).exec();
+  await BooksModel.findByIdAndRemove(req.params.id);
   res.json(deletedBook);
 });
 
