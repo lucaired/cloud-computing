@@ -1,0 +1,25 @@
+version: '3'
+services:
+  server:
+    build: ./server
+    image: lucaired/microservice:server
+    #platform: linux/arm64
+    ports:
+      - "3000:3000"
+    depends_on:
+      - hello-world-service
+      - product-descp-service
+      - product-price-service
+  hello-world-service:
+    build: ./hello-world-service
+    #platform: linux/arm64
+    image: lucaired/microservice:hello
+  product-descp-service:
+    build: ./product-descp-service
+    #platform: linux/arm64
+    image: lucaired/microservice:productdescp
+  product-price-service:
+    build: ./product-price-service
+    #platform: linux/arm64
+    image: lucaired/microservice:productprice
+
