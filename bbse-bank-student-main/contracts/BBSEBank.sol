@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./BBSEToken.sol";
+import "truffle/Console.sol";
 
 contract BBSEBank {
   // BBSE Token Contract instance
@@ -100,6 +101,8 @@ contract BBSEBank {
     investors[msg.sender].startTime = 0;
     investors[msg.sender].hasActiveDeposit = false; 
 
+
+    Console.log(msg.sender.balance);
     /* Send back the deposited Ether to investor using the transfer method
     *        Dont' forget to cast the investor address to a payable address
     */
@@ -107,6 +110,7 @@ contract BBSEBank {
 
     // Mint BBSE tokens to to pay out the interest
     bbseTokenContract.mint(msg.sender, interest);
+    Console.log(msg.sender.balance);
   }
   
 }
